@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Navbar from "../../components/Navbar";
+import Navbar from "components/Navbar";
 import { Edit, Plus, Trash } from "react-feather";
-import ClientModal from "../../components/Modal/ClientModal";
-import { clientBackend } from "../clientBackend";
-import DeleteModal from "../../components/Modal/DeleteModal";
+import ClientModal from "components/Modal/ClientModal";
+import { clientBackend } from "Admin/clientBackend";
+import DeleteModal from "components/Modal/DeleteModal";
 
 const Main = ({ uid }) => {
     const [state, setState] = useState({
@@ -191,7 +191,7 @@ const Main = ({ uid }) => {
                                         <td>{elem.phone}</td>
                                         <td>{elem.email ? elem.email : "No email"}</td>
                                         <td>{elem.gst ? elem.gst : "No gst"}</td>
-                                        <td>not working</td>
+                                        <td>{elem.hid ? elem.hid.location : "Not Assigned"}</td>
                                         <td>
                                             <button
                                                 className="btn btn-sm btn-warning"

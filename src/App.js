@@ -1,11 +1,11 @@
 import React from "react";
 import "./assets/style.scss";
 import "./assets/bootstrap.min.css";
-import Main from "./Client/components/Main";
+import Main from "./Admin/components/Main";
 import { BrowserRouter } from "react-router-dom";
 import { ProtectiveRoute } from "./Authentication/components/ProtectiveRoute";
 import { ProtectiveClientRoute } from "./Authentication/components/ProtectiveClientRoute";
-import Hoarding from "./Client/components/Hoarding";
+import Hoarding from "./Admin/components/Hoarding";
 const ClientSide = () => {
     return (
         <button

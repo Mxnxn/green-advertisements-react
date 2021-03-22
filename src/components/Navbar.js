@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 const Navbar = (props) => {
     const [openMenu, setOpenMenu] = useState(false);
 
+    let url = window.location.pathname.split("/");
+
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
             <a className="navbar-brand" href="/">
@@ -30,12 +32,12 @@ const Navbar = (props) => {
             <a className="nav-link" href="#">Login
             </a>
         </li> */}
-                    <li className="nav-item active">
+                    <li className={url[1] === "admin" && !url[2] ? "nav-item active" : "nav-item"}>
                         <Link to="/admin" className="nav-link" style={{ cursor: "pointer" }}>
                             Clients
                         </Link>
                     </li>
-                    <li className="nav-item">
+                    <li className={url[2] === "hoarding" ? "nav-item active" : "nav-item"}>
                         <Link to="/admin/hoarding" className="nav-link" style={{ cursor: "pointer" }}>
                             Hoarding
                         </Link>
