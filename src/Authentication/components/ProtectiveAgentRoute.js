@@ -1,7 +1,8 @@
 import React from "react";
 import { Route } from "react-router-dom";
+import AgentLogin from "./AgentLogin";
 import ClientLogin from "./ClientLogin";
-export const ProtectiveClientRoute = ({ component: Component, ...rest }) => {
+export const ProtectiveAgentRoute = ({ component: Component, ...rest }) => {
     return (
         <Route
             {...rest}
@@ -9,7 +10,7 @@ export const ProtectiveClientRoute = ({ component: Component, ...rest }) => {
                 if (
                     window.localStorage.getItem("uid") &&
                     window.localStorage.getItem("token") &&
-                    window.localStorage.getItem("mode") === "CLIENT"
+                    window.localStorage.getItem("mode") === "AGENT"
                 ) {
                     return (
                         <Component
@@ -19,7 +20,7 @@ export const ProtectiveClientRoute = ({ component: Component, ...rest }) => {
                         />
                     );
                 } else {
-                    return <ClientLogin />;
+                    return <AgentLogin />;
                 }
             }}
         />

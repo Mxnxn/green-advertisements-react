@@ -1,6 +1,6 @@
 import React from "react";
 
-const AssignModal = ({ isVisible, close, state, setState, submit, clients }) => {
+const AssignAgent = ({ isVisible, close, state, setState, submit, clients }) => {
     return (
         <div className={isVisible ? "modal d-block " : "modal"}>
             <div className="modal-dialog" role="document">
@@ -21,13 +21,13 @@ const AssignModal = ({ isVisible, close, state, setState, submit, clients }) => 
                             <select
                                 class="custom-select"
                                 onChange={(evt) => {
-                                    setState({ ...state, cid: evt.target.value });
+                                    setState({ ...state, sid: evt.target.value });
                                 }}
                             >
                                 <option selected={true}>Select Client to Assign</option>
                                 {clients.map((el, index) => (
                                     <option key={index} value={el._id}>
-                                        {el.cname ? el.cname : el.name}
+                                        {el.name}
                                     </option>
                                 ))}
                             </select>
@@ -47,4 +47,4 @@ const AssignModal = ({ isVisible, close, state, setState, submit, clients }) => 
     );
 };
 
-export default AssignModal;
+export default AssignAgent;

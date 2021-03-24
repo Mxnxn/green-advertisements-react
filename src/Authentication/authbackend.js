@@ -28,6 +28,18 @@ class Authbackend {
         });
     }
 
+    loginAgent(formData) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/agents/login`, formData);
+                if (!response.data.message) throw response.data;
+                resolve(response.data);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
     loginWithEmailAndPassword(formData) {
         return new Promise(async (resolve, reject) => {
             try {

@@ -11,8 +11,9 @@ const ClientLogin = (props) => {
 
     const login = async () => {
         setState({ ...state, status: false });
-        console.log(state);
-        if (state.email === "" || state.password === "") {
+        console.log("");
+
+        if (!state.email || !state.password) {
             return setState({ ...state, status: "Fields Can't be empty!" });
         }
         try {
@@ -20,8 +21,10 @@ const ClientLogin = (props) => {
                 phone: state.email,
                 password: state.password,
             });
-            window.localStorage.setItem("cid", res.uid);
-            window.localStorage.setItem("ctoken", res.token);
+            window.localStorage.setItem("uid", res.uid);
+            window.localStorage.setItem("token", res.token);
+            window.localStorage.setItem("mode", "CLIENT");
+
             window.location.reload();
         } catch (error) {
             setState({ ...state, status: error.response.data.message });
@@ -78,6 +81,15 @@ const ClientLogin = (props) => {
                     Switch to{" "}
                     <Link to="/admin/" className="text-danger">
                         Admin Login
+                    </Link>
+                </small>
+                <small id="emailHelp" class="form-text text-muted mt-2">
+                    OR
+                </small>
+                <small id="emailHelp" class="form-text text-muted mt-2">
+                    Switch to{" "}
+                    <Link to="/agents/" className="text-danger">
+                        Agent Login
                     </Link>
                 </small>
             </div>

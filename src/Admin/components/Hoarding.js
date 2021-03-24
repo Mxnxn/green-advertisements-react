@@ -5,6 +5,7 @@ import HoardingModal from "components/Modal/HoardingModal";
 import { hoardingBackend } from "Admin/hoardingBackend";
 import ImagePreview from "components/Modal/ImagePreview";
 import AssignModal from "components/Modal/AssignModal";
+import AssignAgent from "components/Modal/AssignAgent";
 import DisassignModal from "components/Modal/DisassignModal";
 import DeleteModal from "components/Modal/DeleteModal";
 const Hoarding = (props) => {
@@ -17,6 +18,7 @@ const Hoarding = (props) => {
         imageUrl: "",
         index: "",
         hid: "",
+        hcode: "",
         image: null,
         delete: false,
         edit: false,
@@ -26,7 +28,18 @@ const Hoarding = (props) => {
         title: "",
     };
 
-    const blankAssign = { cid: "", hid: "", view: false, delete: false, index: "" };
+    const blankAssign = {
+        cid: "",
+        hid: "",
+        sid: "",
+        view: false,
+        delete: false,
+        index: "",
+        deleteSuggestion: false,
+        viewSuggestion: false,
+        viewAgent: false,
+        deleteAgent: false,
+    };
 
     const [hoarding, setHoarding] = useState({ ...blankHoaring });
     const [state, setState] = useState({ hoardings: [], stopLoading: false, search: "" });
@@ -39,8 +52,15 @@ const Hoarding = (props) => {
     const getALL = useCallback(async () => {
         try {
             const res = await hoardingBackend.getAllHoardings();
-            const clients = await hoardingBackend.getClientList();
-            setState({ hoardings: [...res.data], copy: [...res.data], clients: [...clients.data], stopLoading: true });
+            const clients = await hoardingBackend.getClientsList();
+            const agents = await hoardingBackend.getAgentsList();
+            setState({
+                hoardings: [...res.data],
+                copy: [...res.data],
+                clients: [...clients.data],
+                agents: [...agents.data],
+                stopLoading: true,
+            });
         } catch (error) {
             console.log(error);
             if (error.response && error.response.data.message === "Unauthorized.") {
@@ -63,6 +83,7 @@ const Hoarding = (props) => {
             formData.set("size", hoarding.size);
             formData.set("location", hoarding.location);
             formData.set("description", hoarding.description);
+            formData.set("hcode", hoarding.hcode);
             formData.set("aid", hoarding.aid);
             const res = await hoardingBackend.addHoarding(formData);
             setState({ ...state, hoardings: [...state.hoardings, { ...res.data }] });
@@ -92,6 +113,64 @@ const Hoarding = (props) => {
         }
     };
 
+    const assignSuggestionClient = async () => {
+        if (!assign.cid || !assign.hid) {
+            return setAssign({ ...assign, status: "Select Client before Assign!" });
+        }
+        try {
+            const formData = new FormData();
+            formData.set("cid", assign.cid);
+            formData.set("hid", assign.hid);
+            const res = await hoardingBackend.suggestClient(formData);
+            const temp = [...state.hoardings];
+            temp[assign.index].scid = res.data.scid;
+            setState({ ...state, hoardings: [...temp] });
+            close();
+        } catch (error) {
+            console.log(error);
+            if (error.response && error.response.data)
+                return setAssign({ ...assign, status: error.response.data.message });
+        }
+    };
+
+    const assignAgent = async () => {
+        console.log(assign);
+        if (!assign.sid || !assign.hid) {
+            return setAssign({ ...assign, status: "Select Agent before Assign!" });
+        }
+        try {
+            const formData = new FormData();
+            formData.set("sid", assign.sid);
+            formData.set("hid", assign.hid);
+            const res = await hoardingBackend.assignAgent(formData);
+            const temp = [...state.hoardings];
+            temp[assign.index].sid = res.data.sid;
+            setState({ ...state, hoardings: [...temp] });
+            close();
+        } catch (error) {
+            console.log(error);
+            if (error.response && error.response.data)
+                return setAssign({ ...assign, status: error.response.data.message });
+        }
+    };
+
+    const retainAgent = async () => {
+        try {
+            const formData = new FormData();
+            formData.set("sid", assign.sid);
+            formData.set("hid", assign.hid);
+            await hoardingBackend.retainAgent(formData);
+            const temp = [...state.hoardings];
+            temp[assign.index].sid = null;
+            setState({ ...state, hoardings: [...temp] });
+            close();
+        } catch (error) {
+            console.log(error);
+            if (error.response && error.response.data)
+                return setAssign({ ...assign, status: error.response.data.message });
+        }
+    };
+
     const retainHoarding = async () => {
         try {
             const formData = new FormData();
@@ -109,6 +188,23 @@ const Hoarding = (props) => {
         }
     };
 
+    const retainSuggestedHoarding = async () => {
+        try {
+            const formData = new FormData();
+            formData.set("cid", assign.cid);
+            formData.set("hid", assign.hid);
+            await hoardingBackend.retainSuggestionClient(formData);
+            const temp = [...state.hoardings];
+            temp[assign.index].scid = null;
+            setState({ ...state, hoardings: [...temp] });
+            close();
+        } catch (error) {
+            console.log(error);
+            if (error.response && error.response.data)
+                return setAssign({ ...assign, status: error.response.data.message });
+        }
+    };
+
     const editHoarding = async () => {
         try {
             const formData = new FormData();
@@ -116,6 +212,7 @@ const Hoarding = (props) => {
             formData.set("size", hoarding.size);
             formData.set("description", hoarding.description);
             formData.set("location", hoarding.location);
+            formData.set("hcode", hoarding.hcode);
             const res = await hoardingBackend.editHoarding(formData);
             if (res.message) {
                 let temp = [...state.hoardings];
@@ -134,11 +231,10 @@ const Hoarding = (props) => {
         try {
             const formData = new FormData();
             formData.set("hid", hoarding.hid);
-            const res = await hoardingBackend.resetHoarding(formData);
+            const res = await hoardingBackend.deleteHoardings(formData);
             if (res.message) {
                 let temp = [...state.hoardings];
                 temp.splice(hoarding.index, 0);
-
                 setState({ ...state, hoardings: [...temp] });
                 close();
             }
@@ -206,6 +302,28 @@ const Hoarding = (props) => {
                         submit={assignClient}
                     />
                     <DisassignModal isVisible={assign.delete} close={close} submit={retainHoarding} />
+                    <AssignModal
+                        isVisible={assign.viewSuggestion}
+                        close={close}
+                        state={assign}
+                        setState={setAssign}
+                        clients={state.clients}
+                        submit={assignSuggestionClient}
+                    />
+                    <DisassignModal
+                        isVisible={assign.deleteSuggestion}
+                        close={close}
+                        submit={retainSuggestedHoarding}
+                    />
+                    <AssignAgent
+                        isVisible={assign.viewAgent}
+                        close={close}
+                        state={assign}
+                        setState={setAssign}
+                        clients={state.agents}
+                        submit={assignAgent}
+                    />
+                    <DisassignModal isVisible={assign.deleteAgent} close={close} submit={retainAgent} />
                     <DeleteModal isVisible={hoarding.delete} close={close} submit={deleteHoarding} />
                 </>
             )}
@@ -254,6 +372,8 @@ const Hoarding = (props) => {
                                 <th scope="col">Location</th>
                                 <th scope="col">Current View</th>
                                 <th scope="col">Assigned</th>
+                                <th scope="col">Suggested</th>
+                                <th scope="col">Agent</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
@@ -261,7 +381,7 @@ const Hoarding = (props) => {
                             <tbody>
                                 {state.hoardings.map((elem, index) => (
                                     <tr class="table-light">
-                                        <td>{index + 1}</td>
+                                        <td>{elem.hcode}</td>
                                         <td>{elem.size}</td>
                                         <td>{elem.description}</td>
                                         <td>{elem.location}</td>
@@ -290,7 +410,7 @@ const Hoarding = (props) => {
                                         <td>
                                             {elem.cid ? (
                                                 <span
-                                                    className=" mr-3 hyperlink"
+                                                    className="hyperlink"
                                                     onClick={() => {
                                                         setAssign({
                                                             ...assign,
@@ -301,7 +421,7 @@ const Hoarding = (props) => {
                                                         });
                                                     }}
                                                 >
-                                                    {elem.cid.name}
+                                                    {elem.cid.cname}
                                                 </span>
                                             ) : (
                                                 <button
@@ -321,6 +441,72 @@ const Hoarding = (props) => {
                                             )}
                                         </td>
                                         <td>
+                                            {elem.scid ? (
+                                                <span
+                                                    className=" hyperlink"
+                                                    onClick={() => {
+                                                        setAssign({
+                                                            ...assign,
+                                                            cid: elem.scid._id,
+                                                            hid: elem._id,
+                                                            index: index,
+                                                            deleteSuggestion: true,
+                                                        });
+                                                    }}
+                                                >
+                                                    {elem.scid.cname}
+                                                </span>
+                                            ) : (
+                                                <button
+                                                    className="btn btn-sm btn-info"
+                                                    style={{ borderRadius: 10 }}
+                                                    onClick={() =>
+                                                        setAssign({
+                                                            ...assign,
+                                                            hid: elem._id,
+                                                            index: index,
+                                                            viewSuggestion: true,
+                                                        })
+                                                    }
+                                                >
+                                                    Suggest
+                                                </button>
+                                            )}
+                                        </td>
+                                        <td>
+                                            {elem.sid ? (
+                                                <span
+                                                    className=" hyperlink"
+                                                    onClick={() => {
+                                                        setAssign({
+                                                            ...assign,
+                                                            sid: elem.sid._id,
+                                                            hid: elem._id,
+                                                            index: index,
+                                                            deleteAgent: true,
+                                                        });
+                                                    }}
+                                                >
+                                                    {elem.sid.name}
+                                                </span>
+                                            ) : (
+                                                <button
+                                                    className="btn btn-sm btn-primary"
+                                                    style={{ borderRadius: 10 }}
+                                                    onClick={() =>
+                                                        setAssign({
+                                                            ...assign,
+                                                            hid: elem._id,
+                                                            index: index,
+                                                            viewAgent: true,
+                                                        })
+                                                    }
+                                                >
+                                                    Assign
+                                                </button>
+                                            )}
+                                        </td>
+                                        <td>
                                             <button
                                                 className="btn btn-sm btn-info"
                                                 style={{ borderRadius: 10 }}
@@ -328,6 +514,7 @@ const Hoarding = (props) => {
                                                     setHoarding({
                                                         ...hoarding,
                                                         hid: elem._id,
+                                                        hcode: elem.hcode,
                                                         size: elem.size,
                                                         location: elem.location,
                                                         description: elem.description,

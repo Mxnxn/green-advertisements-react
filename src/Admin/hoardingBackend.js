@@ -19,10 +19,22 @@ class HoardingBackend {
         });
     }
 
-    getClientList() {
+    getClientsList() {
         return new Promise(async (resolve, reject) => {
             try {
                 const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/clients/list`, { uid: uid }, HEADER);
+                if (!res.data.data) throw res;
+                resolve(res.data);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    getAgentsList() {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/agents/list`, { uid: uid }, HEADER);
                 if (!res.data.data) throw res;
                 resolve(res.data);
             } catch (error) {
@@ -83,10 +95,66 @@ class HoardingBackend {
         });
     }
 
+    suggestClient(formData) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await axios.post(
+                    `${process.env.REACT_APP_API_URL}/api/hoarding/suggestassign`,
+                    formData,
+                    HEADER
+                );
+                if (!res.data.data) throw res;
+                resolve(res.data);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
     retainClient(formData) {
         return new Promise(async (resolve, reject) => {
             try {
                 const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/hoarding/retain`, formData, HEADER);
+                if (!res.data.message) throw res;
+                resolve(res.data);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    retainSuggestionClient(formData) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await axios.post(
+                    `${process.env.REACT_APP_API_URL}/api/hoarding/retainSuggestion`,
+                    formData,
+                    HEADER
+                );
+                if (!res.data.message) throw res;
+                resolve(res.data);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    assignAgent(formData) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/agents/assign`, formData, HEADER);
+                if (!res.data.data) throw res;
+                resolve(res.data);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    retainAgent(formData) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/agents/retain`, formData, HEADER);
                 if (!res.data.message) throw res;
                 resolve(res.data);
             } catch (error) {

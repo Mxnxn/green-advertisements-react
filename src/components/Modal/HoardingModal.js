@@ -20,6 +20,20 @@ const HoardingModal = ({ title, isVisible, state, setState, close, submit }) => 
                         {!state.reset && (
                             <>
                                 <div className="form-group">
+                                    <label for="exampleInputEmail1">Hoarding Code</label>
+                                    <input
+                                        className={
+                                            state.status ? "form-control border is-invalid" : "form-control border"
+                                        }
+                                        aria-describedby="emailHelp"
+                                        placeholder="Enter Location"
+                                        value={state.hcode}
+                                        onChange={(evt) => {
+                                            setState({ ...state, hcode: evt.target.value });
+                                        }}
+                                    />
+                                </div>
+                                <div className="form-group">
                                     <label for="exampleInputEmail1">Location</label>
                                     <input
                                         className={

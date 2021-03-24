@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Navbar = (props) => {
+const Navbar = ({ client }) => {
     const [openMenu, setOpenMenu] = useState(false);
 
     let url = window.location.pathname.split("/");
@@ -27,22 +27,26 @@ const Navbar = (props) => {
                 className={openMenu ? "collapse navbar-collapse show " : "collapse navbar-collapse"}
                 id="navbarColor01"
             >
-                <ul className="navbar-nav mr-auto">
-                    {/* <li className="nav-item">
-            <a className="nav-link" href="#">Login
-            </a>
-        </li> */}
-                    <li className={url[1] === "admin" && !url[2] ? "nav-item active" : "nav-item"}>
-                        <Link to="/admin" className="nav-link" style={{ cursor: "pointer" }}>
-                            Clients
-                        </Link>
-                    </li>
-                    <li className={url[2] === "hoarding" ? "nav-item active" : "nav-item"}>
-                        <Link to="/admin/hoarding" className="nav-link" style={{ cursor: "pointer" }}>
-                            Hoarding
-                        </Link>
-                    </li>
-                </ul>
+                {client && <ul className="navbar-nav mr-auto"></ul>}
+                {!client && (
+                    <ul className="navbar-nav mr-auto">
+                        <li className={url[1] === "admin" && !url[2] ? "nav-item active" : "nav-item"}>
+                            <Link to="/admin" className="nav-link" style={{ cursor: "pointer" }}>
+                                Clients
+                            </Link>
+                        </li>
+                        <li className={url[2] === "hoarding" ? "nav-item active" : "nav-item"}>
+                            <Link to="/admin/hoarding" className="nav-link" style={{ cursor: "pointer" }}>
+                                Hoarding
+                            </Link>
+                        </li>
+                        <li className={url[2] === "agents" ? "nav-item active" : "nav-item"}>
+                            <Link to="/admin/agents" className="nav-link" style={{ cursor: "pointer" }}>
+                                Agents
+                            </Link>
+                        </li>
+                    </ul>
+                )}
                 <div className="form-inline my-2 my-lg-0">
                     <span
                         className="nav-link text-white"
