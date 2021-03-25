@@ -18,6 +18,7 @@ const ClientMain = ({ uid }) => {
         } catch (error) {
             console.log(error);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -49,6 +50,7 @@ const ClientMain = ({ uid }) => {
                                                 <img
                                                     src={`${process.env.REACT_APP_API_URL}/${el.imageUrl}`}
                                                     class="img-fluid imgx"
+                                                    alt="Hoarding "
                                                 />
                                             </div>
                                             <div className="card-footer">{el.location}</div>
@@ -75,6 +77,7 @@ const ClientMain = ({ uid }) => {
                                                 <img
                                                     src={`${process.env.REACT_APP_API_URL}/${el.imageUrl}`}
                                                     class="img-fluid imgx"
+                                                    alt="Suggestion "
                                                 />
                                             </div>
                                             <div className="card-footer">{el.location}</div>

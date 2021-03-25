@@ -77,6 +77,7 @@ const Hoarding = (props) => {
     }, [getALL]);
 
     const addHoarding = async () => {
+        console.log("here");
         try {
             const formData = new FormData();
             formData.append("image", hoarding.image);
@@ -391,7 +392,7 @@ const Hoarding = (props) => {
                                                 onClick={() => {
                                                     setHoarding({
                                                         ...hoarding,
-                                                        imageUrl: `${process.env.REACT_APP_API_URL}/${elem.imageUrl}`,
+                                                        imageUrl: `${process.env.REACT_APP_API_URL}/api/${elem.imageUrl}`,
                                                         view: true,
                                                     });
                                                 }}
@@ -400,8 +401,9 @@ const Hoarding = (props) => {
                                             </span>{" "}
                                             <a
                                                 className="text-info"
-                                                href={`${process.env.REACT_APP_API_URL}/${elem.imageUrl}`}
+                                                href={`${process.env.REACT_APP_API_URL}/api/${elem.imageUrl}`}
                                                 target="_blank"
+                                                rel="noreferrer"
                                             >
                                                 Preview
                                             </a>

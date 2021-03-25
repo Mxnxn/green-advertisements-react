@@ -4,7 +4,7 @@ import DeleteModal from "components/Modal/DeleteModal";
 import ViewAssigned from "components/Modal/ViewAssigned";
 import Navbar from "components/Navbar";
 import React, { useCallback, useEffect, useState } from "react";
-import { Edit, Plus, Trash } from "react-feather";
+import { Plus, Trash } from "react-feather";
 
 const Agent = ({ uid }) => {
     const [state, setState] = useState({
@@ -136,7 +136,7 @@ const Agent = ({ uid }) => {
                             <tbody>
                                 {state.agents.map((elem, index) => (
                                     <tr key={index} class="table-light">
-                                        <td scope="row">{index + 1}</td>
+                                        <td>{index + 1}</td>
                                         <td>{elem.name}</td>
                                         <td>{elem.phone}</td>
                                         <td>

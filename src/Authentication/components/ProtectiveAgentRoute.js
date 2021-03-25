@@ -1,7 +1,6 @@
 import React from "react";
 import { Route } from "react-router-dom";
 import AgentLogin from "./AgentLogin";
-import ClientLogin from "./ClientLogin";
 export const ProtectiveAgentRoute = ({ component: Component, ...rest }) => {
     return (
         <Route

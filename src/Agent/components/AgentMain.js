@@ -48,6 +48,7 @@ const AgentMain = ({ uid }) => {
         } catch (error) {
             console.log(error);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -79,7 +80,7 @@ const AgentMain = ({ uid }) => {
                         <div className="row">
                             {state.agent.hid.length > 0 &&
                                 state.agent.hid.map((el, index) => (
-                                    <div class="col-sm-4 col-md-4">
+                                    <div class="col">
                                         <div class="card border-secondary mb-3">
                                             <div class="card-header">
                                                 {index + 1}: {el.hcode} ({el.size})
@@ -89,6 +90,7 @@ const AgentMain = ({ uid }) => {
                                                     <img
                                                         src={`${process.env.REACT_APP_API_URL}/${el.imageUrl}`}
                                                         class="img-fluid imgx"
+                                                        alt="jobpicture"
                                                     />
                                                 </div>
                                                 <span
