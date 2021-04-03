@@ -232,13 +232,12 @@ const Hoarding = (props) => {
         try {
             const formData = new FormData();
             formData.set("hid", hoarding.hid);
-            const res = await hoardingBackend.deleteHoardings(formData);
-            if (res.message) {
-                let temp = [...state.hoardings];
-                temp.splice(hoarding.index, 0);
-                setState({ ...state, hoardings: [...temp] });
-                close();
-            }
+            await hoardingBackend.deleteHoardings(formData);
+            let temp = [...state.hoardings];
+            console.log(temp, hoarding.index);
+            temp.splice(hoarding.index, 1);
+            setState({ ...state, hoardings: [...temp] });
+            close();
         } catch (error) {
             console.log(error);
         }
@@ -392,7 +391,7 @@ const Hoarding = (props) => {
                                                 onClick={() => {
                                                     setHoarding({
                                                         ...hoarding,
-                                                        imageUrl: `${process.env.REACT_APP_API_URL}/api/${elem.imageUrl}`,
+                                                        imageUrl: `${process.env.REACT_APP_API_URL}/${elem.imageUrl}`,
                                                         view: true,
                                                     });
                                                 }}
@@ -401,7 +400,7 @@ const Hoarding = (props) => {
                                             </span>{" "}
                                             <a
                                                 className="text-info"
-                                                href={`${process.env.REACT_APP_API_URL}/api/${elem.imageUrl}`}
+                                                href={`${process.env.REACT_APP_API_URL}/${elem.imageUrl}`}
                                                 target="_blank"
                                                 rel="noreferrer"
                                             >

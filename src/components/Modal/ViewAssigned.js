@@ -20,13 +20,14 @@ const ViewAssigned = ({ isVisible, state, close }) => {
                                     <th scope="col">Location</th>
                                 </thead>
                                 <tbody>
-                                    {state.map((el, index) => (
-                                        <tr>
-                                            <td>{index + 1}</td>
-                                            <td>{el.hcode}</td>
-                                            <td>{el.location}</td>
-                                        </tr>
-                                    ))}
+                                    {isVisible &&
+                                        state.map((el, index) => (
+                                            <tr>
+                                                <td>{index + 1}</td>
+                                                <td>{el.hcode}</td>
+                                                <td>{el.location}</td>
+                                            </tr>
+                                        ))}
                                 </tbody>
                             </table>
                         </div>

@@ -10,7 +10,7 @@ class AgentSideBackend {
     getAgent() {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/agents/get`, { uid: uid }, HEADER);
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/agents/get`, { uid: uid }, HEADER);
                 if (!res.data.agents) throw res;
                 resolve(res.data);
             } catch (error) {
@@ -22,11 +22,7 @@ class AgentSideBackend {
     resetImage(formData) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(
-                    `${process.env.REACT_APP_API_URL}/api/agents/updateImage`,
-                    formData,
-                    HEADER
-                );
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/agents/updateImage`, formData, HEADER);
                 if (!res.data.message) throw res;
                 resolve(res.data);
             } catch (error) {

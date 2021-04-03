@@ -4,10 +4,7 @@ class Authbackend {
     loginWithPhoneAndPassword(formData) {
         return new Promise(async (resolve, reject) => {
             try {
-                const response = await axios.post(
-                    `${process.env.REACT_APP_API_URL}/api/admin/loginWithPhone`,
-                    formData
-                );
+                const response = await axios.post(`${process.env.REACT_APP_API_URL}/admin/loginWithPhone`, formData);
                 if (!response.data.message) throw response.data;
                 resolve(response.data);
             } catch (error) {
@@ -19,7 +16,7 @@ class Authbackend {
     loginClient(formData) {
         return new Promise(async (resolve, reject) => {
             try {
-                const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/clients/login`, formData);
+                const response = await axios.post(`${process.env.REACT_APP_API_URL}/clients/login`, formData);
                 if (!response.data.message) throw response.data;
                 resolve(response.data);
             } catch (error) {
@@ -31,7 +28,7 @@ class Authbackend {
     loginAgent(formData) {
         return new Promise(async (resolve, reject) => {
             try {
-                const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/agents/login`, formData);
+                const response = await axios.post(`${process.env.REACT_APP_API_URL}/agents/login`, formData);
                 if (!response.data.message) throw response.data;
                 resolve(response.data);
             } catch (error) {
@@ -43,10 +40,7 @@ class Authbackend {
     loginWithEmailAndPassword(formData) {
         return new Promise(async (resolve, reject) => {
             try {
-                const response = await axios.post(
-                    `${process.env.REACT_APP_API_URL}/api/admin/loginWithEmail`,
-                    formData
-                );
+                const response = await axios.post(`${process.env.REACT_APP_API_URL}/admin/loginWithEmail`, formData);
                 if (!response.data.message) throw response.data;
                 resolve(response.data);
             } catch (error) {

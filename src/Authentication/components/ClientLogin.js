@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 
 const ClientLogin = (props) => {
     const [state, setState] = useState({
-        email: "9998883411",
-        password: "123456",
+        email: "",
+        password: "",
         status: "",
     });
 

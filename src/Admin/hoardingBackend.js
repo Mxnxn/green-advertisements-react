@@ -10,7 +10,7 @@ class HoardingBackend {
     addHoarding(data) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/hoarding/add`, data, HEADER);
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/hoarding/add`, data, HEADER);
                 if (!res.data.data) throw res;
                 resolve(res.data);
             } catch (error) {
@@ -22,7 +22,7 @@ class HoardingBackend {
     getClientsList() {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/clients/list`, { uid: uid }, HEADER);
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/clients/list`, { uid: uid }, HEADER);
                 if (!res.data.data) throw res;
                 resolve(res.data);
             } catch (error) {
@@ -34,7 +34,7 @@ class HoardingBackend {
     getAgentsList() {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/agents/list`, { uid: uid }, HEADER);
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/agents/list`, { uid: uid }, HEADER);
                 if (!res.data.data) throw res;
                 resolve(res.data);
             } catch (error) {
@@ -46,11 +46,7 @@ class HoardingBackend {
     getAllHoardings() {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(
-                    `${process.env.REACT_APP_API_URL}/api/hoarding/getAll`,
-                    { aid: uid },
-                    HEADER
-                );
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/hoarding/getAll`, { aid: uid }, HEADER);
                 if (!res.data.data) throw res;
                 resolve(res.data);
             } catch (error) {
@@ -62,7 +58,7 @@ class HoardingBackend {
     deleteHoardings(formData) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/hoarding/delete`, formData, HEADER);
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/hoarding/delete`, formData, HEADER);
                 if (!res.data.message) throw res;
                 resolve(res.data);
             } catch (error) {
@@ -74,7 +70,7 @@ class HoardingBackend {
     editHoarding(formData) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/hoarding/update`, formData, HEADER);
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/hoarding/update`, formData, HEADER);
                 if (!res.data.data) throw res;
                 resolve(res.data);
             } catch (error) {
@@ -86,7 +82,7 @@ class HoardingBackend {
     assignClient(formData) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/hoarding/assign`, formData, HEADER);
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/hoarding/assign`, formData, HEADER);
                 if (!res.data.data) throw res;
                 resolve(res.data);
             } catch (error) {
@@ -99,7 +95,7 @@ class HoardingBackend {
         return new Promise(async (resolve, reject) => {
             try {
                 const res = await axios.post(
-                    `${process.env.REACT_APP_API_URL}/api/hoarding/suggestassign`,
+                    `${process.env.REACT_APP_API_URL}/hoarding/suggestassign`,
                     formData,
                     HEADER
                 );
@@ -114,7 +110,7 @@ class HoardingBackend {
     retainClient(formData) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/hoarding/retain`, formData, HEADER);
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/hoarding/retain`, formData, HEADER);
                 if (!res.data.message) throw res;
                 resolve(res.data);
             } catch (error) {
@@ -127,7 +123,7 @@ class HoardingBackend {
         return new Promise(async (resolve, reject) => {
             try {
                 const res = await axios.post(
-                    `${process.env.REACT_APP_API_URL}/api/hoarding/retainSuggestion`,
+                    `${process.env.REACT_APP_API_URL}/hoarding/retainSuggestion`,
                     formData,
                     HEADER
                 );
@@ -142,7 +138,7 @@ class HoardingBackend {
     assignAgent(formData) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/agents/assign`, formData, HEADER);
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/agents/assign`, formData, HEADER);
                 if (!res.data.data) throw res;
                 resolve(res.data);
             } catch (error) {
@@ -154,7 +150,7 @@ class HoardingBackend {
     retainAgent(formData) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/agents/retain`, formData, HEADER);
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/agents/retain`, formData, HEADER);
                 if (!res.data.message) throw res;
                 resolve(res.data);
             } catch (error) {
@@ -166,11 +162,7 @@ class HoardingBackend {
     resetImage(formData) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(
-                    `${process.env.REACT_APP_API_URL}/api/hoarding/updateImage`,
-                    formData,
-                    HEADER
-                );
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/hoarding/updateImage`, formData, HEADER);
                 if (!res.data.message) throw res;
                 resolve(res.data);
             } catch (error) {

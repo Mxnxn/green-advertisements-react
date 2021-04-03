@@ -3,8 +3,8 @@ import { authBackend } from "../authbackend";
 import { Link } from "react-router-dom";
 const Login = (props) => {
     const [state, setState] = useState({
-        email: "9904842410",
-        password: "ASGreen42410",
+        email: "",
+        password: "",
         status: "",
     });
 

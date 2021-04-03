@@ -10,11 +10,7 @@ class AgentBackend {
     getAllAgents() {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(
-                    `${process.env.REACT_APP_API_URL}/api/agents/getAll`,
-                    { uid: uid },
-                    HEADER
-                );
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/agents/getAll`, { uid: uid }, HEADER);
                 if (!res.data.agents) throw res;
                 resolve(res.data);
             } catch (error) {
@@ -26,8 +22,20 @@ class AgentBackend {
     addAgent(formData) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/addAgent`, formData, HEADER);
-                if (!res.data.client) throw res;
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/admin/addAgent`, formData, HEADER);
+                if (!res.data.agent) throw res;
+                resolve(res.data);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    deleteAgent(formData) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/agents/delete`, formData, HEADER);
+                if (!res.data.message) throw res;
                 resolve(res.data);
             } catch (error) {
                 reject(error);

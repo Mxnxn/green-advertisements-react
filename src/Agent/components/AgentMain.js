@@ -80,21 +80,26 @@ const AgentMain = ({ uid }) => {
                         <div className="row">
                             {state.agent.hid.length > 0 &&
                                 state.agent.hid.map((el, index) => (
-                                    <div class="col">
-                                        <div class="card border-secondary mb-3">
-                                            <div class="card-header">
-                                                {index + 1}: {el.hcode} ({el.size})
+                                    <div class="col-sm-12 col-md-4">
+                                        <div class="card border-light mb-3">
+                                            <div class="card-header border-light bg-light">
+                                                <div class="fnt-mt-b">
+                                                    {el.hcode} ({el.size})
+                                                </div>
+                                                <div className="fnt-mt-l">{el.location}</div>
                                             </div>
-                                            <div class="card-body">
+                                            <div class="card-body p-1">
                                                 <div className="mb-2">
                                                     <img
                                                         src={`${process.env.REACT_APP_API_URL}/${el.imageUrl}`}
-                                                        class="img-fluid imgx"
+                                                        class="img-fluid "
                                                         alt="jobpicture"
                                                     />
                                                 </div>
+                                            </div>
+                                            <div className="card-footer bg-light border-light">
                                                 <span
-                                                    className="hyperlink my-2"
+                                                    className="hyperlink my-2 fnt-mt-b"
                                                     onClick={() => {
                                                         setAgentUpload({
                                                             ...agentUpload,
@@ -107,7 +112,6 @@ const AgentMain = ({ uid }) => {
                                                     Upload
                                                 </span>
                                             </div>
-                                            <div className="card-footer">{el.location}</div>
                                         </div>
                                     </div>
                                 ))}

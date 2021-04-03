@@ -20,6 +20,7 @@ const Agent = ({ uid }) => {
         phone: "",
         password: "",
         name: "",
+        index: "",
         hid: [],
         add: false,
         assign: false,
@@ -65,9 +66,25 @@ const Agent = ({ uid }) => {
             });
             setState({
                 ...state,
-                agents: [...state.agents, res.agent],
+                agents: [...state.agents, { ...res.agent }],
             });
             setAgent({ ...initAgent });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const deleteAgent = async () => {
+        try {
+            const res = await agentBackend.deleteAgent({
+                sid: agent.sid,
+            });
+            if (res.message) {
+                let temp = [...state.agents];
+                temp.splice(agent.index, 1);
+                setState({ ...state, agents: temp });
+                setAgent({ ...initAgent });
+            }
         } catch (error) {
             console.log(error);
         }
@@ -85,7 +102,7 @@ const Agent = ({ uid }) => {
                 submit={addAgent}
             />
             <ViewAssigned isVisible={agent.assign} state={agent.hid} close={closeModal} />
-            <DeleteModal submit={() => {}} close={closeModal} isVisible={agent.delete} />
+            <DeleteModal submit={deleteAgent} close={closeModal} isVisible={agent.delete} />
             <div className="jumbotron">
                 <div className="row px-3 d-flex">
                     <div class="form-group ml-auto">
@@ -160,7 +177,8 @@ const Agent = ({ uid }) => {
                                                 onClick={() => {
                                                     setAgent({
                                                         ...agent,
-                                                        cid: elem._id,
+                                                        sid: elem._id,
+                                                        index: index,
                                                         delete: true,
                                                     });
                                                 }}

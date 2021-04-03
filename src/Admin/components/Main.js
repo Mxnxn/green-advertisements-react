@@ -76,7 +76,7 @@ const Main = ({ uid }) => {
     };
 
     const updateClient = async () => {
-        if (!client.name) {
+        if (!client.cname || !client.pname) {
             return setClient({ ...client, status: "Fields can't be empty!" });
         }
         try {
@@ -88,11 +88,10 @@ const Main = ({ uid }) => {
                 email: client.email,
                 gst: client.gst,
             });
-
             let temp = [...state.clients];
             const indx = temp.findIndex((el) => el._id === state.cid);
             temp.splice(indx, 1);
-            temp.splice(indx, 0, res.client);
+            temp.splice(indx, 0, { ...res.client, hid: [] });
             setState({
                 ...state,
                 clients: temp,
@@ -100,17 +99,11 @@ const Main = ({ uid }) => {
             setClient({ ...initClient });
         } catch (error) {
             console.log(error);
-            setClient({
-                email: "",
-                phone: "",
-                status: error.response.data.message,
-                gst: "",
-                password: "",
-                cname: "",
-                pname: "",
-                add: false,
-                edit: false,
-            });
+            if (error.response)
+                setClient({
+                    ...initClient,
+                    status: error.response.data.message,
+                });
         }
     };
 

@@ -10,7 +10,7 @@ class ClientBackend {
     addClient(formData) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/addClient`, formData, HEADER);
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/admin/addClient`, formData, HEADER);
                 if (!res.data.client) throw res;
                 resolve(res.data);
             } catch (error) {
@@ -22,11 +22,7 @@ class ClientBackend {
     getAllClients() {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(
-                    `${process.env.REACT_APP_API_URL}/api/clients/getAll`,
-                    { uid: uid },
-                    HEADER
-                );
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/clients/getAll`, { uid: uid }, HEADER);
                 if (!res.data.clients) throw res;
                 resolve(res.data);
             } catch (error) {
@@ -38,7 +34,7 @@ class ClientBackend {
     updateClient(data) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/clients/update`, data, HEADER);
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/clients/update`, data, HEADER);
                 if (!res.data.client) throw res;
                 resolve(res.data);
             } catch (error) {
@@ -50,7 +46,7 @@ class ClientBackend {
     deleteClient(data) {
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/clients/delete`, data, HEADER);
+                const res = await axios.post(`${process.env.REACT_APP_API_URL}/clients/delete`, data, HEADER);
                 if (!res.data.message) throw res;
                 resolve(res.data);
             } catch (error) {
