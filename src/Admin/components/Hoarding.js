@@ -117,6 +117,8 @@ const Hoarding = (props) => {
             const res = await hoardingBackend.assignClient(formData);
             const temp = [...state.hoardings];
             temp[assign.index].cid = res.data.cid;
+            const indexx = temp[assign.index].scid.findIndex((el) => el._id === temp[assign.index].cid._id);
+            temp[assign.index].scid.splice(indexx, 1);
             setState({ ...state, hoardings: [...temp] });
             close();
         } catch (error) {

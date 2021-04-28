@@ -29,7 +29,7 @@ const ClientMain = ({ uid }) => {
     const [toggleText, setToggleText] = useState(false);
 
     const locationHandler = (location) => {
-        let letterLenght = window.innerWidth > 1280 ? 45 : 20;
+        let letterLenght = window.innerWidth > 1280 ? 35 : 20;
         if (location.length > letterLenght) {
             return (
                 <span
