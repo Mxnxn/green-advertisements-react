@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { authBackend } from "../authbackend";
-import { Link } from "react-router-dom";
 
 const ClientLogin = (props) => {
     const [state, setState] = useState({
@@ -77,7 +76,7 @@ const ClientLogin = (props) => {
                         Login
                     </button>
                 </div>
-                <small id="emailHelp" class="form-text text-muted mt-4">
+                {/* <small id="emailHelp" class="form-text text-muted mt-4">
                     Switch to{" "}
                     <Link to="/admin/" className="text-danger">
                         Admin Login
@@ -91,7 +90,7 @@ const ClientLogin = (props) => {
                     <Link to="/agents/" className="text-danger">
                         Agent Login
                     </Link>
-                </small>
+                </small> */}
             </div>
         </div>
     );

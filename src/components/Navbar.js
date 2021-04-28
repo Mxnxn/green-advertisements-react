@@ -1,16 +1,26 @@
 import React, { useState } from "react";
+import { Power } from "react-feather";
 import { Link } from "react-router-dom";
 
 const Navbar = ({ client }) => {
     const [openMenu, setOpenMenu] = useState(false);
 
     let url = window.location.pathname.split("/");
-
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-            <a className="navbar-brand" href="/">
-                GREEN ADVERTISERS
+        <nav className="navbar navbar-expand-lg navbar-dark bg-primary" style={{ paddingTop: 10, paddingLeft: 20, paddingBottom: 10 }}>
+            <a className="navbar-brand" href={window.location.href}>
+                <img src={require("../assets/logo.png").default} alt="logo" style={{ height: "50px" }} />
             </a>
+            {!url[2] && (
+                <small className="navbar-brand" href={window.location.href}>
+                    <small>{`Client Portal`}</small>
+                </small>
+            )}
+            {url[2] === "agents" && (
+                <small className="navbar-brand" href={window.location.href}>
+                    <small>{`Agent Portal`}</small>
+                </small>
+            )}
             <button
                 className="navbar-toggler"
                 onClick={() => setOpenMenu(!openMenu)}
@@ -23,26 +33,23 @@ const Navbar = ({ client }) => {
             >
                 <span className="navbar-toggler-icon"></span>
             </button>
-            <div
-                className={openMenu ? "collapse navbar-collapse show " : "collapse navbar-collapse"}
-                id="navbarColor01"
-            >
+            <div className={openMenu ? "collapse navbar-collapse show " : "collapse navbar-collapse"} id="navbarColor01">
                 {client && <ul className="navbar-nav mr-auto"></ul>}
                 {!client && (
                     <ul className="navbar-nav mr-auto">
-                        <li className={url[1] === "admin" && !url[2] ? "nav-item active" : "nav-item"}>
-                            <Link to="/admin" className="nav-link" style={{ cursor: "pointer" }}>
-                                Clients
-                            </Link>
-                        </li>
-                        <li className={url[2] === "hoarding" ? "nav-item active" : "nav-item"}>
+                        <li className={url[3] === "hoarding" ? "nav-item active" : "nav-item"}>
                             <Link to="/admin/hoarding" className="nav-link" style={{ cursor: "pointer" }}>
                                 Hoarding
                             </Link>
                         </li>
-                        <li className={url[2] === "agents" ? "nav-item active" : "nav-item"}>
+                        <li className={url[3] === "agents" ? "nav-item active" : "nav-item"}>
                             <Link to="/admin/agents" className="nav-link" style={{ cursor: "pointer" }}>
                                 Agents
+                            </Link>
+                        </li>
+                        <li className={url[2] === "admin" && !url[3] ? "nav-item active" : "nav-item"}>
+                            <Link to="/admin" className="nav-link" style={{ cursor: "pointer" }}>
+                                Clients
                             </Link>
                         </li>
                     </ul>
@@ -57,7 +64,7 @@ const Navbar = ({ client }) => {
                             window.location.reload();
                         }}
                     >
-                        Logout
+                        <Power className="logout-btn-icn" />
                     </span>
                 </div>
             </div>

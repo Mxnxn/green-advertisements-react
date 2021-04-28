@@ -1,4 +1,5 @@
 import { clientSideBackend } from "Client/clientsideBackend";
+import ImageCardWithCarousel from "components/ImageCardWithCarousel";
 import Navbar from "components/Navbar";
 import React, { useCallback, useEffect, useState } from "react";
 
@@ -25,6 +26,41 @@ const ClientMain = ({ uid }) => {
         getClient();
     }, [getClient]);
 
+    const [toggleText, setToggleText] = useState(false);
+
+    const locationHandler = (location) => {
+        let letterLenght = window.innerWidth > 1280 ? 45 : 20;
+        if (location.length > letterLenght) {
+            return (
+                <span
+                    class=""
+                    id="complete_text"
+                    onClick={() => {
+                        setToggleText((prev) => !prev);
+                    }}
+                >
+                    {toggleText ? (
+                        <span>
+                            {location}
+                            <small className="text-danger">...less</small>
+                        </span>
+                    ) : (
+                        <span>
+                            {location.slice(0, letterLenght)}
+                            <small className="text-danger">..more</small>
+                        </span>
+                    )}
+                </span>
+            );
+        } else {
+            return (
+                <span id="emailHelp" class="text-muted">
+                    {location}
+                </span>
+            );
+        }
+    };
+
     return (
         <>
             <Navbar client={true} />
@@ -40,25 +76,7 @@ const ClientMain = ({ uid }) => {
                         )}
                         <div className="row">
                             {state.client.hid.length > 0 &&
-                                state.client.hid.map((el, index) => (
-                                    <div class="col-sm-12 col-md-4">
-                                        <div class="mb-3 card border-light rounded  ">
-                                            <div className="card-header bg-light border-light">
-                                                <div className="fnt-mt-b">
-                                                    #{el.hcode} ({el.size})
-                                                </div>
-                                                <div className="fnt-mt-l">{el.location}</div>
-                                            </div>
-                                            <div className="card-body p-1">
-                                                <img
-                                                    src={`${process.env.REACT_APP_API_URL}/${el.imageUrl}`}
-                                                    class="img-fluid"
-                                                    alt="Hoarding "
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
+                                state.client.hid.map((el, index) => <ImageCardWithCarousel el={el} locationHandler={locationHandler} />)}
                         </div>
                         {state.client.shid.length > 0 && (
                             <div className="row">
@@ -69,25 +87,7 @@ const ClientMain = ({ uid }) => {
                         )}
                         <div className="row">
                             {state.client.shid.length > 0 &&
-                                state.client.shid.map((el, index) => (
-                                    <div class="col-sm-12 col-md-5">
-                                        <div class="mb-3 card border-light rounded  ">
-                                            <div className="card-header bg-light border-light">
-                                                <div className="fnt-mt-b">
-                                                    #{el.hcode} ({el.size})
-                                                </div>
-                                                <div className="fnt-mt-l">{el.location}</div>
-                                            </div>
-                                            <div className="card-body p-1">
-                                                <img
-                                                    src={`${process.env.REACT_APP_API_URL}/${el.imageUrl}`}
-                                                    class="img-fluid"
-                                                    alt="Hoarding "
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
+                                state.client.shid.map((el, index) => <ImageCardWithCarousel el={el} locationHandler={locationHandler} />)}
                         </div>
                     </div>
                 )}

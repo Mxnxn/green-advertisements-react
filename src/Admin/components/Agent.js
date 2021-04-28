@@ -93,14 +93,7 @@ const Agent = ({ uid }) => {
     return (
         <>
             <Navbar />
-            <AgentModal
-                title={agent.title}
-                isVisible={agent.add}
-                state={agent}
-                setState={setAgent}
-                close={closeModal}
-                submit={addAgent}
-            />
+            <AgentModal title={agent.title} isVisible={agent.add} state={agent} setState={setAgent} close={closeModal} submit={addAgent} />
             <ViewAssigned isVisible={agent.assign} state={agent.hid} close={closeModal} />
             <DeleteModal submit={deleteAgent} close={closeModal} isVisible={agent.delete} />
             <div className="jumbotron">
@@ -117,8 +110,8 @@ const Agent = ({ uid }) => {
                             onChange={(evt) => {
                                 setState({ ...state, search: evt.target.value });
                                 if (evt.target.value !== "") {
-                                    const temp = state.agents.filter(
-                                        (el) => el.name.match(evt.target.value) || el.phone.match(evt.target.value)
+                                    const temp = state.copy.filter(
+                                        (el) => el.name.toUpperCase().match(evt.target.value.toUpperCase()) || el.phone.match(evt.target.value.toUpperCase())
                                     );
                                     setState({ ...state, agents: [...temp] });
                                 } else {
@@ -145,6 +138,8 @@ const Agent = ({ uid }) => {
                             <th scope="col">Sr.</th>
                             <th scope="col">Name</th>
                             <th scope="col">Phone</th>
+                            <th scope="col">Password</th>
+
                             <th scope="col">View</th>
                             <th scope="col">Action</th>
                         </thead>
@@ -156,6 +151,8 @@ const Agent = ({ uid }) => {
                                         <td>{index + 1}</td>
                                         <td>{elem.name}</td>
                                         <td>{elem.phone}</td>
+                                        <td>{elem.password}</td>
+
                                         <td>
                                             {elem.hid.length > 0 ? (
                                                 <span

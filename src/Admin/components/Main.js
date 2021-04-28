@@ -151,9 +151,7 @@ const Main = ({ uid }) => {
                             onChange={(evt) => {
                                 setState({ ...state, search: evt.target.value });
                                 if (evt.target.value !== "") {
-                                    const temp = state.clients.filter(
-                                        (el) => el.cname.match(evt.target.value) || el.phone.match(evt.target.value)
-                                    );
+                                    const temp = state.clients.filter((el) => el.cname.match(evt.target.value) || el.phone.match(evt.target.value));
                                     setState({ ...state, clients: [...temp] });
                                 } else {
                                     setState({ ...state, clients: [...state.copyOfClients] });
@@ -180,6 +178,7 @@ const Main = ({ uid }) => {
                             <th scope="col">Company</th>
                             <th scope="col">Name</th>
                             <th scope="col">Phone</th>
+                            <th scope="col">Password</th>
                             <th scope="col">Email</th>
                             <th scope="col">GST</th>
                             <th scope="col">Hoarding</th>
@@ -193,6 +192,7 @@ const Main = ({ uid }) => {
                                         <td>{elem.cname}</td>
                                         <td>{elem.pname}</td>
                                         <td>{elem.phone}</td>
+                                        <td>{elem.password}</td>
                                         <td>{elem.email ? elem.email : "No email"}</td>
                                         <td>{elem.gst ? elem.gst : "No gst"}</td>
                                         <td>

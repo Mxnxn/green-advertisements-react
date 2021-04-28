@@ -22,9 +22,7 @@ const HoardingModal = ({ title, isVisible, state, setState, close, submit }) => 
                                 <div className="form-group">
                                     <label for="exampleInputEmail1">Hoarding Code</label>
                                     <input
-                                        className={
-                                            state.status ? "form-control border is-invalid" : "form-control border"
-                                        }
+                                        className={state.status ? "form-control border is-invalid" : "form-control border"}
                                         aria-describedby="emailHelp"
                                         placeholder="Enter Location"
                                         value={state.hcode}
@@ -36,9 +34,7 @@ const HoardingModal = ({ title, isVisible, state, setState, close, submit }) => 
                                 <div className="form-group">
                                     <label for="exampleInputEmail1">Location</label>
                                     <input
-                                        className={
-                                            state.status ? "form-control border is-invalid" : "form-control border"
-                                        }
+                                        className={state.status ? "form-control border is-invalid" : "form-control border"}
                                         aria-describedby="emailHelp"
                                         placeholder="Enter Location"
                                         value={state.location}
@@ -50,9 +46,7 @@ const HoardingModal = ({ title, isVisible, state, setState, close, submit }) => 
                                 <div className="form-group">
                                     <label for="exampleInputEmail1">Size</label>
                                     <input
-                                        className={
-                                            state.status ? "form-control border is-invalid" : "form-control border"
-                                        }
+                                        className={state.status ? "form-control border is-invalid" : "form-control border"}
                                         id="exampleInputEmail1"
                                         aria-describedby="emailHelp"
                                         placeholder="Enter size"
@@ -87,31 +81,67 @@ const HoardingModal = ({ title, isVisible, state, setState, close, submit }) => 
                         </div> */}
                         {!state.edit && (
                             <div class="form-group">
-                                <div class="input-group ">
+                                <span>Images</span>
+                                <div class="input-group mt-2">
                                     <div class="custom-file ">
                                         <input
                                             type="file"
                                             disabled={state.edit}
+                                            multiple
                                             onChange={(evt) => {
-                                                const file = evt.target.files[0];
-                                                if (file) {
-                                                    const validFileType = ["image/jpg", "image/jpeg", "image/png"];
-                                                    if (validFileType.includes(file["type"])) {
-                                                        setState({ ...state, image: evt.target.files[0] });
-                                                    } else {
-                                                        setState({
+                                                const files = evt.target.files;
+                                                const validFileType = ["image/jpg", "image/jpeg", "image/png"];
+                                                for (let index = 0; index < files.length; index++) {
+                                                    const file = files[index];
+                                                    if (!validFileType.includes(file["type"])) {
+                                                        return setState({
                                                             ...state,
                                                             status: "Image format should be jpg, jpeg or png.",
                                                         });
                                                     }
+                                                }
+                                                if (files.length < 6 && files.length > 0) {
+                                                    let temp = [];
+                                                    for (let index = 0; index < files.length; index++) {
+                                                        const file = files[index];
+                                                        if (validFileType.includes(file["type"])) {
+                                                            temp.push(file);
+                                                        } else {
+                                                            setState({
+                                                                ...state,
+                                                                status: "Image format should be jpg, jpeg or png.",
+                                                            });
+                                                        }
+                                                    }
+                                                    console.log(temp);
+                                                    setState({ ...state, image: temp });
+                                                } else {
+                                                    return setState({
+                                                        ...state,
+                                                        status: "Maximum 5 images are allowed!",
+                                                    });
                                                 }
                                             }}
                                             class="custom-file-input is-invalid"
                                             id="inputGroupFile02"
                                         />
                                         <label class="custom-file-label" for="inputGroupFile02">
-                                            {state.image ? state.image.name : "Choose file"}
+                                            Click here to select
                                         </label>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        {state.image.length > 0 && (
+                            <div class="form-group">
+                                <small className="text-primary">Selected Files</small>
+                                <div className="input-group mt-2">
+                                    <div>
+                                        {state.image.map((el) => (
+                                            <div>
+                                                <small className="text-danger">{el.name}</small>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>

@@ -13,7 +13,7 @@ import AgentMain from "Agent/components/AgentMain";
 
 const App = (props) => {
     return (
-        <BrowserRouter basename="/">
+        <BrowserRouter basename="/erp">
             <div className="App ">
                 <div className="container-fluid px-0 overflow-hidden">
                     <ProtectiveRoute exact path="/admin/" component={Main} />
