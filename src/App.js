@@ -10,6 +10,7 @@ import Main from "Admin/components/Main";
 import { ProtectiveAgentRoute } from "Authentication/components/ProtectiveAgentRoute";
 import Agent from "Admin/components/Agent";
 import AgentMain from "Agent/components/AgentMain";
+import Invoice from "Admin/components/Invoice";
 
 const App = (props) => {
     return (
@@ -19,6 +20,7 @@ const App = (props) => {
                     <ProtectiveRoute exact path="/admin/" component={Main} />
                     <ProtectiveRoute exact path="/admin/hoarding" component={Hoarding} />
                     <ProtectiveRoute exact path="/admin/agents" component={Agent} />
+                    <ProtectiveRoute exact path="/admin/invoice" component={Invoice} />
                     <ProtectiveClientRoute exact path="/" component={ClientMain} />
                     <ProtectiveAgentRoute exact path="/agents/" component={AgentMain} />
                 </div>

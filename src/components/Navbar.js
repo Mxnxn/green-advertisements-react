@@ -52,6 +52,11 @@ const Navbar = ({ client }) => {
                                 Clients
                             </Link>
                         </li>
+                        <li className={url[3] === "invoice" ? "nav-item active" : "nav-item"}>
+                            <Link to="/admin/invoice" className="nav-link " style={{ cursor: "pointer" }}>
+                                Invoice & Ledger
+                            </Link>
+                        </li>
                     </ul>
                 )}
                 <div className="form-inline my-2 my-lg-0">
