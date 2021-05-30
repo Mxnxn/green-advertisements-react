@@ -11,22 +11,27 @@ import { ProtectiveAgentRoute } from "Authentication/components/ProtectiveAgentR
 import Agent from "Admin/components/Agent";
 import AgentMain from "Agent/components/AgentMain";
 import Invoice from "Admin/components/Invoice";
+import { ProtectiveVendorRoute } from "Authentication/components/ProtectiveVendorRoute";
+import VendorMain from "Vendor/components/VendorMain";
+import Vendor from "Admin/components/Vendor";
 
 const App = (props) => {
-    return (
-        <BrowserRouter basename="/erp">
-            <div className="App ">
-                <div className="container-fluid px-0 overflow-hidden">
-                    <ProtectiveRoute exact path="/admin/" component={Main} />
-                    <ProtectiveRoute exact path="/admin/hoarding" component={Hoarding} />
-                    <ProtectiveRoute exact path="/admin/agents" component={Agent} />
-                    <ProtectiveRoute exact path="/admin/invoice" component={Invoice} />
-                    <ProtectiveClientRoute exact path="/" component={ClientMain} />
-                    <ProtectiveAgentRoute exact path="/agents/" component={AgentMain} />
-                </div>
-            </div>
-        </BrowserRouter>
-    );
+	return (
+		<BrowserRouter basename="/erp">
+			<div className="App ">
+				<div className="container-fluid px-0 overflow-hidden">
+					<ProtectiveRoute exact path="/admin/" component={Main} />
+					<ProtectiveRoute exact path="/admin/hoarding" component={Hoarding} />
+					<ProtectiveRoute exact path="/admin/agents" component={Agent} />
+					<ProtectiveRoute exact path="/admin/invoice" component={Invoice} />
+					<ProtectiveRoute exact path="/admin/vendor" component={Vendor} />
+					<ProtectiveClientRoute exact path="/" component={ClientMain} />
+					<ProtectiveAgentRoute exact path="/agents/" component={AgentMain} />
+					<ProtectiveVendorRoute exact path="/vendor/" component={VendorMain} />
+				</div>
+			</div>
+		</BrowserRouter>
+	);
 };
 
 export default App;
