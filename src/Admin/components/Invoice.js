@@ -1,25 +1,51 @@
 import { invoiceBackend } from "Admin/invoiceBackend";
 import AddInvoice from "components/Modal/AddInvoice";
+import DeleteModal from "components/Modal/DeleteModal";
 import Navbar from "components/Navbar";
-import React, { useCallback, useEffect, useState } from "react";
-import { ArrowLeft } from "react-feather";
+import Pagination from "components/Pagination";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { ArrowLeft, Trash } from "react-feather";
+import { vendorBackend } from "Vendor/vendorBackend";
 
 const Invoice = (props) => {
 	const [state, setState] = useState({
 		clients: [],
+		vendors: [],
+		copyOfClients: [],
+		copyOfVendors: [],
 		stopLoading: false,
 	});
 
 	const blankUpload = {
 		files: [],
+		id: "",
 		cid: "",
 		year: "",
+		date: "",
 		aid: window.localStorage.getItem("uid"),
+		delete: false,
+		type: "",
 		status: false,
 		success: false,
 		addInvoice: false,
 		addLedger: false,
 	};
+
+	const [pagination, setPagination] = useState({
+		numberPerPages: 15,
+		firstIndex: 0,
+		lastIndex: 15,
+		currentPage: 1,
+		rowIndex: 15 * 1 - 15 + 1,
+	});
+
+	const [vendorPagination, setVendorPagination] = useState({
+		numberPerPages: 15,
+		firstIndex: 0,
+		lastIndex: 15,
+		currentPage: 1,
+		rowIndex: 15 * 1 - 15 + 1,
+	});
 
 	const [upload, setUpload] = useState({
 		...blankUpload,
@@ -28,15 +54,22 @@ const Invoice = (props) => {
 	const getAll = useCallback(async () => {
 		try {
 			const filteredClient = await invoiceBackend.getClientsDetails();
+			const res = await vendorBackend.getAllVendor();
+			let currentClients = [...filteredClient.data];
+			currentClients = [...currentClients.slice(pagination.firstIndex, pagination.lastIndex)];
 			setState((state) => ({
 				...state,
-				clients: [...filteredClient.data],
+				clients: [...currentClients],
+				copyOfClients: [...filteredClient.data],
+				vendors: [...res.vendors],
+				copyOfVendors: [...res.vendors],
 				status: false,
 				stopLoading: true,
 			}));
 		} catch (error) {}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
 	useEffect(() => {
 		getAll();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -55,12 +88,11 @@ const Invoice = (props) => {
 			formData.set("aid", upload.aid);
 			formData.set("cid", upload.cid);
 			formData.set("year", upload.year);
-
+			formData.set("date", upload.date);
 			for (let index = 0; index < upload.files.length; index++) {
 				const element = upload.files[index];
 				formData.append("files", element);
 			}
-			formData.set("aid", upload.aid);
 			await invoiceBackend.addInvoice(formData);
 			setUpload({ ...upload, success: true });
 		} catch (error) {
@@ -78,18 +110,37 @@ const Invoice = (props) => {
 				formData.set("aid", upload.aid);
 				formData.set("cid", upload.cid);
 				formData.set("year", upload.year);
-
+				formData.set("date", upload.date);
 				for (let index = 0; index < upload.files.length; index++) {
 					const element = upload.files[index];
 					formData.append("files", element);
 				}
-				formData.set("aid", upload.aid);
 				await invoiceBackend.addLedger(formData);
 				setUpload({ ...upload, success: true });
 			} catch (error) {
 				console.log(error);
 			}
 		} catch (error) {}
+	};
+
+	const deleteFile = async () => {
+		if (!upload.type || !upload.id) {
+			return setUpload({ ...upload, status: "Something is missing!" });
+		}
+		try {
+			const formData = new FormData();
+			formData.set("aid", upload.aid);
+			formData.set("iid", upload.id);
+			formData.set("type", upload.type);
+			await invoiceBackend.deleteFile(formData);
+			setUpload({ ...upload, success: true });
+		} catch (error) {
+			if (error?.response?.data) {
+				setUpload({ ...upload, status: error.response.data.message });
+			} else {
+				setUpload({ ...upload, status: error.message });
+			}
+		}
 	};
 
 	const [view, setView] = useState({
@@ -119,11 +170,47 @@ const Invoice = (props) => {
 		return `${mmm} ${dd} ${yyyy} ${hh}:${mm}`;
 	};
 
+	const scrollRef = useRef(null);
+
+	const vendorRef = useRef(null);
+
+	useEffect(() => {
+		if (state.stopLoading) {
+			setState((prev) => ({
+				...state,
+				clients: state.copyOfClients.slice(pagination.firstIndex, pagination.lastIndex),
+			}));
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [pagination.currentPage]);
+
+	useEffect(() => {
+		if (state.stopLoading) {
+			setState((prev) => ({
+				...state,
+				vendors: state.copyOfVendors.slice(vendorPagination.firstIndex, vendorPagination.lastIndex),
+			}));
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [vendorPagination.currentPage]);
+
+	let tempIndex = 1;
+	const increseIndex = (index, pagin) => {
+		if (index === 0) {
+			tempIndex = pagin.rowIndex;
+			return tempIndex;
+		} else {
+			tempIndex = tempIndex + 1;
+			return tempIndex;
+		}
+	};
+
 	return (
 		<>
 			<Navbar />
 			{state.stopLoading && (
 				<>
+					<DeleteModal isVisible={upload.delete} submit={deleteFile} close={close} />
 					{!view.displayYear && !view.displayRows && (
 						<div className="jumbotron">
 							<div className="row px-3 d-flex">
@@ -148,6 +235,9 @@ const Invoice = (props) => {
 									</button>
 								</div>
 							</div>
+							<div className="row px-3 my-2 d-flex" ref={scrollRef}>
+								<h3 className="my-3">Clients</h3>
+							</div>
 							<div className="row px-3 d-flex">
 								<table className="table table-hover border">
 									<thead>
@@ -159,24 +249,67 @@ const Invoice = (props) => {
 										<th scope="col">Ledgers</th>
 									</thead>
 									<tbody>
-										{state.clients.map((client, index) => (
+										{state.clients.map((client, index) => {
+											return (
+												<tr
+													style={{ cursor: "pointer" }}
+													onClick={() => {
+														setView({ ...view, displayYear: true, files: client.files });
+													}}
+												>
+													<th scope="row">{increseIndex(index, pagination)}</th>
+													<th scope="row">{client.cname}</th>
+													<th scope="row">{client.pname}</th>
+													<th scope="row">{client.phone}</th>
+													<th scope="row">{client.totalInvoices}</th>
+													<th scope="row">{client.totalLedgers}</th>
+												</tr>
+											);
+										})}
+									</tbody>
+								</table>
+								<Pagination
+									scrollRef={scrollRef}
+									state={state.copyOfClients}
+									pagination={pagination}
+									setPagination={setPagination}
+								/>
+							</div>
+							<div className="row px-3 my-2 d-flex" ref={vendorRef}>
+								<h3 className="my-3">Vendors</h3>
+							</div>
+							<div className="row px-3 d-flex">
+								<table className="table table-hover border">
+									<thead>
+										<th scope="col">#</th>
+										<th scope="col">Name</th>
+										<th scope="col">Phone</th>
+										<th scope="col">Invoices</th>
+										<th scope="col">Ledgers</th>
+									</thead>
+									<tbody>
+										{state.vendors.map((vendor, index) => (
 											<tr
 												style={{ cursor: "pointer" }}
 												onClick={() => {
-													setView({ ...view, displayYear: true, files: client.files });
+													setView({ ...view, displayYear: true, files: vendor.files });
 												}}
 											>
-												<th scope="row">{index + 1}</th>
-												<th scope="row">{client.cname}</th>
-												<th scope="row">{client.pname}</th>
-												<th scope="row">{client.phone}</th>
-												<th scope="row">{client.totalInvoices}</th>
-												<th scope="row">{client.totalLedgers}</th>
+												<th scope="row">{increseIndex(index, vendorPagination)}</th>
+												<th scope="row">{vendor.name}</th>
+												<th scope="row">{vendor.phone}</th>
+												<th scope="row">{vendor.totalInvoices}</th>
+												<th scope="row">{vendor.totalLedgers}</th>
 											</tr>
 										))}
 									</tbody>
 								</table>
-								<small class="text-danger">Tap on row to explore</small>
+								<Pagination
+									scrollRef={vendorRef}
+									state={state.copyOfVendors}
+									pagination={vendorPagination}
+									setPagination={setVendorPagination}
+								/>
 							</div>
 							<AddInvoice
 								isVisible={upload.addInvoice}
@@ -242,15 +375,16 @@ const Invoice = (props) => {
 								{view.yearlyData.ledgers.length > 0 ? (
 									<table className="table table-hover border">
 										<thead>
-											<th scope="col">#</th>
+											<th scope="col">Ledger Date</th>
 											<th scope="col">Name</th>
 											<th scope="col">Preview</th>
 											<th scope="col">Uploaded on</th>
+											<th scope="col">Action</th>
 										</thead>
 										<tbody>
 											{view.yearlyData.ledgers.map((ledger, index) => (
 												<tr key={index}>
-													<th scope="row">{index + 1}</th>
+													<th scope="row">{ledger.date}</th>
 													<th scope="row">{getNames(ledger.fileUrl)}</th>
 													<th scope="row">
 														<a
@@ -263,6 +397,22 @@ const Invoice = (props) => {
 														</a>
 													</th>
 													<th scope="row">{getDate(ledger.createdAt)}</th>
+													<th>
+														<button
+															className="btn btn-sm btn-danger  ml-2"
+															style={{ borderRadius: 10 }}
+															onClick={() => {
+																setUpload({
+																	...upload,
+																	id: ledger._id,
+																	type: "LEDGER",
+																	delete: true,
+																});
+															}}
+														>
+															<Trash size="12" />
+														</button>
+													</th>
 												</tr>
 											))}
 										</tbody>
@@ -277,15 +427,16 @@ const Invoice = (props) => {
 							<div className="row px-3 d-flex">
 								<table className="table table-hover border">
 									<thead>
-										<th scope="col">#</th>
+										<th scope="col">Invoice Date</th>
 										<th scope="col">Name</th>
 										<th scope="col">Preview</th>
 										<th scope="col">Uploaded on</th>
+										<th scope="col">Action</th>
 									</thead>
 									<tbody>
 										{view.yearlyData.invoices.map((invoice, index) => (
 											<tr key={index}>
-												<th scope="row">{index + 1}</th>
+												<th scope="row">{invoice.date}</th>
 												<th scope="row">{getNames(invoice.fileUrl)}</th>
 												<th scope="row">
 													<a
@@ -298,6 +449,22 @@ const Invoice = (props) => {
 													</a>
 												</th>
 												<th scope="row">{getDate(invoice.createdAt)}</th>
+												<th scope="row">
+													<button
+														className="btn btn-sm btn-danger  ml-2"
+														style={{ borderRadius: 10 }}
+														onClick={() => {
+															setUpload({
+																...upload,
+																id: invoice._id,
+																type: "INVOICE",
+																delete: true,
+															});
+														}}
+													>
+														<Trash size="12" />
+													</button>
+												</th>
 											</tr>
 										))}
 									</tbody>

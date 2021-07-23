@@ -29,6 +29,19 @@ const UploadSingleModal = ({ title, isVisible, state, setState, close, submit })
 										}}
 									/>
 								</div>
+								<div className="form-group">
+									<label for="exampleInputEmail1">date</label>
+									<input
+										type="date"
+										className={state.status ? "form-control border is-invalid" : "form-control border"}
+										aria-describedby="emailHelp"
+										placeholder="2020-21"
+										value={state.date}
+										onChange={(evt) => {
+											setState({ ...state, date: evt.target.value });
+										}}
+									/>
+								</div>
 								<div class="form-group">
 									<span>PDF</span>
 									<div class="input-group mt-2">

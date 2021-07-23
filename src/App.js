@@ -20,8 +20,8 @@ const App = (props) => {
 		<BrowserRouter basename="/erp">
 			<div className="App ">
 				<div className="container-fluid px-0 overflow-hidden">
-					<ProtectiveRoute exact path="/admin/" component={Main} />
-					<ProtectiveRoute exact path="/admin/hoarding" component={Hoarding} />
+					<ProtectiveRoute exact path="/admin/clients" component={Main} />
+					<ProtectiveRoute exact path="/admin/" component={Hoarding} />
 					<ProtectiveRoute exact path="/admin/agents" component={Agent} />
 					<ProtectiveRoute exact path="/admin/invoice" component={Invoice} />
 					<ProtectiveRoute exact path="/admin/vendor" component={Vendor} />

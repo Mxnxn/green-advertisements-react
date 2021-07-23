@@ -14,6 +14,9 @@ const Navbar = ({ client }) => {
 			<a className="navbar-brand" href={window.location.href}>
 				<img src={require("../assets/logo.png").default} alt="logo" style={{ height: "50px" }} />
 			</a>
+			<a className="navbar-brand" href={window.location.href}>
+				<img src={require("../assets/logo2.png").default} alt="logo" style={{ height: "50px" }} />
+			</a>
 			{!url[2] && (
 				<small className="navbar-brand" href={window.location.href}>
 					<small>{`Client Portal`}</small>
@@ -40,8 +43,8 @@ const Navbar = ({ client }) => {
 				{client && <ul className="navbar-nav mr-auto"></ul>}
 				{!client && (
 					<ul className="navbar-nav mr-auto">
-						<li className={url[3] === "hoarding" ? "nav-item active" : "nav-item"}>
-							<Link to="/admin/hoarding" className="nav-link" style={{ cursor: "pointer" }}>
+						<li className={url[2] === "admin" && !url[3] ? "nav-item active" : "nav-item"}>
+							<Link to="/admin/" className="nav-link" style={{ cursor: "pointer" }}>
 								Hoarding
 							</Link>
 						</li>
@@ -50,8 +53,8 @@ const Navbar = ({ client }) => {
 								Agents
 							</Link>
 						</li>
-						<li className={url[2] === "admin" && !url[3] ? "nav-item active" : "nav-item"}>
-							<Link to="/admin" className="nav-link" style={{ cursor: "pointer" }}>
+						<li className={url[3] === "clients" ? "nav-item active" : "nav-item"}>
+							<Link to="/admin/clients" className="nav-link" style={{ cursor: "pointer" }}>
 								Clients
 							</Link>
 						</li>

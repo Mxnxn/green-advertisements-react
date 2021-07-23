@@ -36,7 +36,11 @@ const Login = (props) => {
 				window.location.reload();
 			}
 		} catch (error) {
-			setState({ ...state, status: error.response.data.message });
+			if (error.response?.data) {
+				setState({ ...state, status: error.response.data.message });
+			} else {
+				setState({ ...state, status: error.message });
+			}
 		}
 	};
 

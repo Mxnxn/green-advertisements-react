@@ -27,6 +27,7 @@ const LiteNavbar = ({ view, setView }) => {
 				<ul className="navbar-nav mr-auto">
 					<li
 						className={view.home ? "nav-link active" : "nav-link"}
+						style={{ cursor: "pointer" }}
 						onClick={() => {
 							setView({ ...view, ledgers: false, home: true, invoice: false });
 						}}
@@ -35,6 +36,7 @@ const LiteNavbar = ({ view, setView }) => {
 					</li>
 					<li
 						className={view.invoice ? "active nav-link" : "nav-link"}
+						style={{ cursor: "pointer" }}
 						onClick={() => {
 							setView({ ...view, ledgers: false, home: false, invoice: true });
 						}}
@@ -43,6 +45,7 @@ const LiteNavbar = ({ view, setView }) => {
 					</li>
 					<li
 						className={view.ledgers ? "active nav-link" : "nav-link"}
+						style={{ cursor: "pointer" }}
 						onClick={() => {
 							setView({ ...view, ledgers: true, home: false, invoice: false });
 						}}
