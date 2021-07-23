@@ -59,6 +59,22 @@ const AddInvoice = ({ isVisible, close, state, submit, clients, setState, name }
 							)}
 							{!state.success && (
 								<div class="form-group">
+									<span>Date</span>
+									<div class="input-group mt-2">
+										<input
+											type="date"
+											className="form-control"
+											value={state.date}
+											placeholder="Enter Financial Year"
+											onChange={(evt) => {
+												setState({ ...state, date: evt.target.value });
+											}}
+										/>
+									</div>
+								</div>
+							)}
+							{!state.success && (
+								<div class="form-group">
 									<span>Pdfs</span>
 									<div class="input-group mt-2">
 										<div class="custom-file ">

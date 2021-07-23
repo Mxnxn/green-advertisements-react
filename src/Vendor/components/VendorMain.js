@@ -17,6 +17,7 @@ const VendorMain = (props) => {
 		vid: window.localStorage.getItem("uid"),
 		file: null,
 		years: "",
+		date: "",
 		statusChange: false,
 		status: false,
 		success: false,
@@ -57,6 +58,8 @@ const VendorMain = (props) => {
 			const formData = new FormData();
 			formData.set("vid", vendor.vid);
 			formData.set("year", vendor.years);
+			formData.set("date", vendor.date);
+
 			formData.append("invoice", vendor.file);
 			const res = vendorBackend.addInvoice(formData);
 			setVendor({ ...vendor, success: true, status: false });
@@ -72,6 +75,7 @@ const VendorMain = (props) => {
 			const formData = new FormData();
 			formData.set("vid", vendor.vid);
 			formData.set("year", vendor.years);
+			formData.set("date", vendor.date);
 			formData.append("ledger", vendor.file);
 			const res = vendorBackend.addLedger(formData);
 			setVendor({ ...vendor, success: true, status: false });
@@ -172,7 +176,7 @@ const VendorMain = (props) => {
 							<h3 className="my-3">Ledgers</h3>
 							<table className="table table-hover border mt-2">
 								<thead>
-									<th scope="col">Index</th>
+									<th scope="col">Ledger Date</th>
 									<th scope="col">Filename</th>
 									<th scope="col">Preview</th>
 									<th scope="col">Uploaded on</th>
@@ -182,7 +186,7 @@ const VendorMain = (props) => {
 								<tbody>
 									{vendor.rows.ledgers.map((el, index) => (
 										<tr>
-											<th scope="row">{index + 1}</th>
+											<th scope="row">{el.date}</th>
 											<th scope="row">{getNames(el.fileUrl)}</th>
 											<th scope="row">
 												<a className="text text-warning" href={`${process.env.REACT_APP_API_URL}/${el.fileUrl}`}>
@@ -216,7 +220,7 @@ const VendorMain = (props) => {
 							) : (
 								<table className="table table-hover border mt-2">
 									<thead>
-										<th scope="col">Index</th>
+										<th scope="col">Invoice Date</th>
 										<th scope="col">Filename</th>
 										<th scope="col">Preview</th>
 										<th scope="col">Uploaded on</th>
@@ -226,7 +230,7 @@ const VendorMain = (props) => {
 									<tbody>
 										{vendor.rows.invoices.map((el, index) => (
 											<tr>
-												<th scope="row">{index + 1}</th>
+												<th scope="row">{el.date}</th>
 												<th scope="row">{getNames(el.fileUrl)}</th>
 												<th scope="row">
 													<a className="text text-warning" href={`${process.env.REACT_APP_API_URL}/${el.fileUrl}`}>

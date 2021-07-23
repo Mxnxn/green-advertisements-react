@@ -134,7 +134,7 @@ const ClientMain = ({ uid }) => {
 									<table className="table table-hover border ">
 										<thead>
 											<tr>
-												<th scope="col">#</th>
+												<th scope="col">Invoice Date</th>
 												<th scope="col">Name</th>
 												<th scope="col">Action</th>
 												<th scope="col">Uploaded on</th>
@@ -143,7 +143,7 @@ const ClientMain = ({ uid }) => {
 										<tbody>
 											{state.client.invoices.map((el, index) => (
 												<tr>
-													<th scope="row">{index + 1}</th>
+													<th scope="row">{el.date}</th>
 													<th scope="row">{getNames(el.fileUrl)}</th>
 													<th scope="row">
 														<a
@@ -174,7 +174,7 @@ const ClientMain = ({ uid }) => {
 									<table className="table table-hover border ">
 										<thead>
 											<tr>
-												<th scope="col">#</th>
+												<th scope="col">Invoice Date</th>
 												<th scope="col">Name</th>
 												<th scope="col">Action</th>
 												<th scope="col">Uploaded on</th>
@@ -183,7 +183,7 @@ const ClientMain = ({ uid }) => {
 										<tbody>
 											{state.client.ledgers.map((el, index) => (
 												<tr>
-													<th scope="row">{index + 1}</th>
+													<th scope="row">{el.date}</th>
 													<th scope="row">{getNames(el.fileUrl)}</th>
 													<th scope="row">
 														<a

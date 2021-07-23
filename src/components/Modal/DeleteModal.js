@@ -14,11 +14,11 @@ const DeleteModal = ({ isVisible, submit, close }) => {
 					<div className="modal-body">
 						<p>Are you sure?</p>
 					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-primary" onClick={submit}>
+					<div className="modal-footer">
+						<button type="button" className="btn btn-primary" onClick={submit}>
 							Delete
 						</button>
-						<button type="button" class="btn btn-secondary" data-dismiss="modal" onClick={close}>
+						<button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={close}>
 							Close
 						</button>
 					</div>

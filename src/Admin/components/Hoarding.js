@@ -33,7 +33,6 @@ const Hoarding = (props) => {
 		view: false,
 		add: false,
 		reset: false,
-
 		title: "",
 	};
 
@@ -60,14 +59,20 @@ const Hoarding = (props) => {
 		setAssign({ ...blankAssign });
 	};
 
+	const sortAlphaNum = (a, b) => {
+		// console.log(b.hcode);
+		return a.hcode.toString().localeCompare(b.hcode, "en", { numeric: true });
+	};
+
 	const getALL = useCallback(async () => {
 		try {
 			const res = await hoardingBackend.getAllHoardings();
 			const clients = await hoardingBackend.getClientsList();
 			const agents = await hoardingBackend.getAgentsList();
+			let temp = [...res.data.sort(sortAlphaNum)];
 			setState({
-				hoardings: [...res.data],
-				copy: [...res.data],
+				hoardings: [...temp],
+				copy: [...temp],
 				clients: [...clients.data],
 				agents: [...agents.data],
 				stopLoading: true,
@@ -88,16 +93,15 @@ const Hoarding = (props) => {
 	}, [getALL]);
 
 	const addHoarding = async () => {
-		console.log("here");
 		try {
 			const formData = new FormData();
 			for (let index = 0; index < hoarding.image.length; index++) {
 				formData.append(`images`, hoarding.image[index]);
 			}
 			formData.set("size", hoarding.size);
-			formData.set("location", hoarding.location);
-			formData.set("description", hoarding.description);
-			formData.set("hcode", hoarding.hcode);
+			formData.set("location", hoarding.location.toUpperCase());
+			formData.set("description", hoarding.description.toUpperCase());
+			formData.set("hcode", hoarding.hcode.toUpperCase());
 			formData.set("aid", hoarding.aid);
 			const res = await hoardingBackend.addHoarding(formData);
 			setState({ ...state, hoardings: [...state.hoardings, { ...res.data }] });
@@ -219,9 +223,9 @@ const Hoarding = (props) => {
 		try {
 			const formData = new FormData();
 			formData.set("hid", hoarding.hid);
-			formData.set("size", hoarding.size);
-			formData.set("description", hoarding.description);
-			formData.set("location", hoarding.location);
+			formData.set("size", hoarding.size.toUpperCase());
+			formData.set("description", hoarding.description.toUpperCase());
+			formData.set("location", hoarding.location.toUpperCase());
 			formData.set("hcode", hoarding.hcode);
 			const res = await hoardingBackend.editHoarding(formData);
 			if (res.message) {
@@ -296,7 +300,7 @@ const Hoarding = (props) => {
 		<>
 			<Navbar />
 			{state.stopLoading && (
-				<>
+				<div>
 					<HoardingModal
 						title={hoarding.title}
 						isVisible={hoarding.add}
@@ -366,7 +370,7 @@ const Hoarding = (props) => {
 						setAssign={setAssign}
 						state={assign}
 					/>
-				</>
+				</div>
 			)}
 			<div className="jumbotron">
 				<div className="row px-3 d-flex">
