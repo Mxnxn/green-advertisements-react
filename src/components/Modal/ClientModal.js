@@ -30,7 +30,7 @@ const ClientModal = ({ title, isVisible, state, setState, close, submit }) => {
                             />
                         </div>
                         <div className="form-group">
-                            <label for="exampleInputEmail1">Contact Name</label>
+                            <label for="exampleInputEmail1">Display Name</label>
                             <input
                                 className={state.status ? "form-control border is-invalid" : "form-control border"}
                                 aria-describedby="emailHelp"
@@ -83,9 +83,7 @@ const ClientModal = ({ title, isVisible, state, setState, close, submit }) => {
                                     setState({ ...state, password: evt.target.value });
                                 }}
                             />
-                            {state.edit && (
-                                <small className="text-danger">Enter new password to change or Leave empty!</small>
-                            )}
+                            {state.edit && <small className="text-danger">Enter new password to change or Leave empty!</small>}
                         </div>
                         <div className="form-group">
                             <label for="exampleInputEmail1">GST IN</label>
@@ -98,6 +96,21 @@ const ClientModal = ({ title, isVisible, state, setState, close, submit }) => {
                                 value={state.gst}
                                 onChange={(evt) => {
                                     setState({ ...state, gst: evt.target.value });
+                                }}
+                            />
+                            <small classNameName="text-warning">Optional</small>
+                        </div>
+                        <div className="form-group">
+                            <label for="exampleInputEmail1">Address</label>
+                            <input
+                                type="text"
+                                className="form-control border"
+                                id="exampleInputEmail1"
+                                aria-describedby="emailHelp"
+                                placeholder="Street, Area"
+                                value={state.address}
+                                onChange={(evt) => {
+                                    setState({ ...state, address: evt.target.value });
                                 }}
                             />
                             <small classNameName="text-warning">Optional</small>

@@ -1,4 +1,5 @@
 import React from "react";
+import { Edit2 } from "react-feather";
 
 const EditButton = ({ elem, index, setHoarding }) => {
     return (
@@ -11,6 +12,8 @@ const EditButton = ({ elem, index, setHoarding }) => {
                     hid: elem._id,
                     hcode: elem.hcode,
                     size: elem.size,
+                    hsn: elem.hsn,
+                    rate: elem.rate,
                     location: elem.location,
                     description: elem.description,
                     index: index,
@@ -18,7 +21,7 @@ const EditButton = ({ elem, index, setHoarding }) => {
                 }));
             }}
         >
-            Edit
+            <Edit2 size={12} />
         </button>
     );
 };

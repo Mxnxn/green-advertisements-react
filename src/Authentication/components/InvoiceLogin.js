@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { authBackend } from "../authbackend";
 import { Link } from "react-router-dom";
-const Login = (props) => {
+const InvoiceLogin = (props) => {
     const [state, setState] = useState({
         email: "",
         password: "",
         status: "",
-        query: new URLSearchParams(window.location.search).get("type"),
     });
 
     const login = async () => {
@@ -16,32 +15,13 @@ const Login = (props) => {
             return setState({ ...state, status: "Fields Can't be empty!" });
         }
         try {
-            if (state.email.includes("@")) {
-                const res = await authBackend.loginWithEmailAndPassword({
-                    email: state.email,
-                    password: state.password,
-                });
-                if (state.query === "redirect") return window.location.replace(`https://invoice.greenadvertisers.in/admin?mtoken=${res.token}`);
-                window.localStorage.setItem("uid", res.uid);
-                window.localStorage.setItem("token", res.token);
-                window.localStorage.setItem("mode", "ADMIN");
-            } else {
-                const res = await authBackend.loginWithPhoneAndPassword({
-                    phone: state.email,
-                    password: state.password,
-                    forInvoice: true,
-                });
-                // if (state.query === "redirect") return window.location.replace(`https://invoice.greenadvertisers.in/admin?mtoken=${res.token}`);
-                if (state.query === "redirect")
-                    return setTimeout(() => {
-                        return window.location.replace(`http://localhost:3000/admin?mtoken=${res.token}`);
-                    }, 2000);
-
-                window.localStorage.setItem("uid", res.uid);
-                window.localStorage.setItem("token", res.token);
-                window.localStorage.setItem("mode", "ADMIN");
-            }
-            window.location.reload();
+            const res = await authBackend.loginWithPhoneAndPassword({
+                phone: state.email,
+                password: state.password,
+                forInvoice: true,
+            });
+            // return window.location.replace(`https://invoice.greenadvertisers.in/admin?mtoken=${res.token}`);
+            return window.location.replace(`http://localhost:3000/admin?mtoken=${res.token}`);
         } catch (error) {
             if (error.response?.data) {
                 setState({ ...state, status: error.response.data.message });
@@ -54,14 +34,14 @@ const Login = (props) => {
     return (
         <div className="bs-docs-section ">
             <div className="col-lg-4 jumbotron mx-auto mt-4 h-100 shadow">
-                <h1 class="">ADMIN</h1>
+                <h1 class="">Login</h1>
                 {state.status && (
                     <div class="alert alert-dismissible alert-danger">
                         <strong>{state.status}</strong>
                     </div>
                 )}
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Email address/Phone</label>
+                    <label for="exampleInputEmail1">Phone</label>
                     <input
                         class="form-control border"
                         id="exampleInputEmail1"
@@ -99,8 +79,8 @@ const Login = (props) => {
                 </div>
                 <small id="emailHelp" class="form-text text-muted mt-4">
                     Switch to{" "}
-                    <Link to="/admin/redirect" className="text-danger">
-                        Invoice Login
+                    <Link to="/admin" className="text-danger">
+                        Admin Login
                     </Link>
                 </small>
                 <small id="emailHelp" class="form-text text-muted ">
@@ -126,4 +106,4 @@ const Login = (props) => {
     );
 };
 
-export default Login;
+export default InvoiceLogin;

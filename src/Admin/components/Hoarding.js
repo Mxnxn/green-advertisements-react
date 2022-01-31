@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Download, Plus } from "react-feather";
+import { CheckCircle, Download, Plus } from "react-feather";
 import Navbar from "components/Navbar";
 import HoardingModal from "components/Modal/HoardingModal";
 import { hoardingBackend } from "Admin/hoardingBackend";
@@ -28,6 +28,8 @@ const Hoarding = (props) => {
         index: "",
         hid: "",
         hcode: "",
+        hsn: "",
+        rate: "",
         image: [],
         delete: false,
         edit: false,
@@ -61,7 +63,6 @@ const Hoarding = (props) => {
     };
 
     const sortAlphaNum = (a, b) => {
-        // console.log(b.hcode);
         return a.hcode.toString().localeCompare(b.hcode, "en", { numeric: true });
     };
 
@@ -71,6 +72,11 @@ const Hoarding = (props) => {
             const clients = await hoardingBackend.getClientsList();
             const agents = await hoardingBackend.getAgentsList();
             let temp = [...res.data.sort(sortAlphaNum)];
+            for (let i = 0; i < temp.length; i++) {
+                const el = temp[i];
+                el.checked = false;
+            }
+            console.log(temp);
             setState({
                 hoardings: [...temp],
                 copy: [...temp],
@@ -104,6 +110,8 @@ const Hoarding = (props) => {
             formData.set("description", hoarding.description.toUpperCase());
             formData.set("hcode", hoarding.hcode.toUpperCase());
             formData.set("aid", hoarding.aid);
+            formData.set("hsn", hoarding.hsn.toUpperCase());
+            formData.set("rate", hoarding.rate);
             const res = await hoardingBackend.addHoarding(formData);
             setState({ ...state, hoardings: [...state.hoardings, { ...res.data }] });
             close();
@@ -228,6 +236,8 @@ const Hoarding = (props) => {
             formData.set("description", hoarding.description.toUpperCase());
             formData.set("location", hoarding.location.toUpperCase());
             formData.set("hcode", hoarding.hcode);
+            formData.set("hsn", hoarding.hsn.toUpperCase());
+            formData.set("rate", hoarding.rate);
             const res = await hoardingBackend.editHoarding(formData);
             if (res.message) {
                 let temp = [...state.hoardings];
@@ -300,11 +310,24 @@ const Hoarding = (props) => {
     const [pdfData, setPdfData] = useState({
         rows: [],
         display: false,
+        alert: {
+            show: false,
+            msg: "",
+        },
     });
 
     const generatePdf = () => {
         const rows = state.hoardings.filter((hoarding) => !hoarding.cid);
         setPdfData({ ...pdfData, rows: rows, display: true });
+    };
+
+    const selectedForPdf = () => {
+        const rows = state.hoardings.filter((hoarding) => hoarding.checked);
+        if (rows.length > 0) {
+            setPdfData({ ...pdfData, rows: rows, display: true });
+        } else {
+            setPdfData({ ...pdfData, alert: { show: true, msg: "No Row Selected for PDF" } });
+        }
     };
 
     return (
@@ -358,6 +381,13 @@ const Hoarding = (props) => {
                 </div>
             )}
             <div className="jumbotron">
+                {pdfData.alert.show && (
+                    <div className="row px-3 d-flex">
+                        <div className="col-sm-3">
+                            <div className="alert alert-danger">{pdfData.alert.msg}</div>
+                        </div>
+                    </div>
+                )}
                 <div className="row px-3 d-flex">
                     <div class="form-group ml-auto">
                         <label for="exampleInputEmail1 ">Search</label>
@@ -389,7 +419,10 @@ const Hoarding = (props) => {
                 </div>
                 <div className="row px-3 d-flex">
                     <h1>Hoardings</h1>
-                    <button className="btn btn-outline-primary ml-auto mb-2" onClick={generatePdf}>
+                    <button className="btn btn-outline-primary ml-auto mb-2" onClick={selectedForPdf}>
+                        <CheckCircle size="12" /> Custom PDF
+                    </button>
+                    <button className="btn btn-outline-primary ml-2 mb-2" onClick={generatePdf}>
                         <Download size="12" /> PDF
                     </button>
                     <button
@@ -410,6 +443,9 @@ const Hoarding = (props) => {
                     <table className="table table-hover border ">
                         <thead>
                             <tr>
+                                <th scope="col" style={{ padding: "1.5rem 10px", margin: "auto 0" }}>
+                                    Select
+                                </th>
                                 <th scope="col">Sr.</th>
                                 <th scope="col">Size</th>
                                 <th scope="col">Description</th>
@@ -425,10 +461,26 @@ const Hoarding = (props) => {
                             <tbody>
                                 {state.hoardings.map((elem, index) => (
                                     <tr class="table-light">
+                                        <td style={{ width: "50px" }}>
+                                            <div class="form-check">
+                                                <input
+                                                    class="form-check-input"
+                                                    onClick={() => {
+                                                        state.hoardings[index].checked = !state.hoardings[index].checked;
+                                                        setState({ ...state, hoardings: [...state.hoardings] });
+                                                    }}
+                                                    type="checkbox"
+                                                    value=""
+                                                    id="flexCheckChecked"
+                                                    checked={elem.checked && "checked"}
+                                                />
+                                                <label class="form-check-label" for="flexCheckChecked"></label>
+                                            </div>
+                                        </td>
                                         <td>{elem.hcode}</td>
                                         <td>{elem.size}</td>
-                                        <td>{elem.description}</td>
-                                        <td>{elem.location}</td>
+                                        <td style={{ width: "100px" }}>{elem.description}</td>
+                                        <td style={{ width: "300px" }}>{elem.location}</td>
                                         <td style={{ display: "flex", flexDirection: "column", padding: "10px 20px" }}>
                                             {elem.images.map((elx, index) => (
                                                 <small
@@ -447,7 +499,7 @@ const Hoarding = (props) => {
                                                 </small>
                                             ))}
                                         </td>
-                                        <td>
+                                        <td style={{ width: "100px" }}>
                                             <AssignButton elem={elem} setAssign={setAssign} index={index} />
                                         </td>
                                         <td>
